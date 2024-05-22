@@ -22,8 +22,6 @@ local function toggle_inlay_hints()
 end
 
 local function lsp_config()
-    local lspconfig = require("lspconfig")
-
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
     vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -97,6 +95,27 @@ local function mason_lsp_config()
     }
 end
 
+local function dap_config()
+    local dap = require('dap')
+    dap.adapters.lldb = {
+        type = 'executable',
+        command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
+        name = 'lldb'
+    }
+
+    dap.configurations.rust = {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+    }
+end
+
 require("lazy-bootstrap").setup({
     {
         "nvim-treesitter/nvim-treesitter",
@@ -141,6 +160,11 @@ require("lazy-bootstrap").setup({
         opts = {
             inlay_hints = { enabled = true },
         },
+    },
+    {
+        "mfussenegger/nvim-dap",
+        lazy = true,
+        config = dap_config,
     },
     {
         'mrcjkb/rustaceanvim',
