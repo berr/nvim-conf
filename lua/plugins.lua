@@ -11,10 +11,10 @@ local function airline_init()
 end
 
 local function nerdtree_config()
-   set({"n", "v"}, "<Leader>dt", ":NERDTreeFocus<CR>")
-   set({"n", "v"}, "<Leader>dT", ":NERDTreeClose<CR>")
-   set({"n", "v"}, "<Leader>t", ":NERDTreeToggle<CR>")
-   set({"n", "v"}, "<Leader>T", ":NERDTreeFind<CR>")
+    set({ "n", "v" }, "<Leader>dt", ":NERDTreeFocus<CR>")
+    set({ "n", "v" }, "<Leader>dT", ":NERDTreeClose<CR>")
+    set({ "n", "v" }, "<Leader>t", ":NERDTreeToggle<CR>")
+    set({ "n", "v" }, "<Leader>T", ":NERDTreeFind<CR>")
 end
 
 local function toggle_inlay_hints()
@@ -44,7 +44,7 @@ local function lsp_config()
             local opts = { buffer = ev.buf }
             vim.keymap.set('n', '<Leader>ch', vim.lsp.buf.hover, opts)
             vim.keymap.set('n', '<Leader>cs', vim.lsp.buf.signature_help, opts)
-            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts) 
+            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts)
             vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
             vim.keymap.set('n', '<Leader>rr', vim.lsp.buf.rename, opts)
             vim.keymap.set('n', '<Leader>rf', function()
@@ -52,14 +52,14 @@ local function lsp_config()
             end, opts)
 
             local builtin = require('telescope.builtin')
-            vim.keymap.set('n', 'gs', builtin.lsp_document_symbols) 
-            vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols) 
-            vim.keymap.set('n', 'gr', builtin.lsp_references) 
-            vim.keymap.set('n', 'gc', builtin.lsp_incoming_calls) 
-            vim.keymap.set('n', 'gC', builtin.lsp_outgoing_calls) 
-            vim.keymap.set('n', 'gi', builtin.lsp_implementations) 
-            vim.keymap.set('n', 'gd', builtin.lsp_definitions) 
-            vim.keymap.set('n', 'gD', builtin.lsp_type_definitions) 
+            vim.keymap.set('n', 'gs', builtin.lsp_document_symbols)
+            vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols)
+            vim.keymap.set('n', 'gr', builtin.lsp_references)
+            vim.keymap.set('n', 'gc', builtin.lsp_incoming_calls)
+            vim.keymap.set('n', 'gC', builtin.lsp_outgoing_calls)
+            vim.keymap.set('n', 'gi', builtin.lsp_implementations)
+            vim.keymap.set('n', 'gd', builtin.lsp_definitions)
+            vim.keymap.set('n', 'gD', builtin.lsp_type_definitions)
         end
     })
 end
@@ -75,13 +75,35 @@ local function telescope_config()
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 end
 
+local function mason_config()
+    require("mason").setup()
+end
+
+local function mason_lsp_config()
+    local lspconfig = require("mason-lspconfig");
+
+    lspconfig.setup {
+        ensure_installed = { "lua_ls", "rust_analyzer", "pyright" },
+    }
+
+    lspconfig.setup_handlers {
+        function(server_name)
+            require("lspconfig")[server_name].setup {}
+        end,
+
+        ["rust_analyzer"] = function()
+            rust_config()
+        end
+    }
+end
+
 require("lazy-bootstrap").setup({
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup {
-	            ensure_installed = { "c", "lua", "rust" },
+                ensure_installed = { "bash", "c", "cpp", "dockerfile", "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore", "hcl", "json", "lua", "markdown", "markdown_inline", "python", "rust", "sql", "vim", "vimdoc" },
                 highlight = { enable = true, }
             }
         end
@@ -102,6 +124,17 @@ require("lazy-bootstrap").setup({
         config = nerdtree_config,
     },
     {
+        "williamboman/mason.nvim",
+        lazy = false,
+        config = mason_config,
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = mason_lsp_config,
+        lazy = false,
+        dependencies = { "williamboman/mason.nvim" },
+    },
+    {
         "neovim/nvim-lspconfig",
         lazy = false,
         config = lsp_config,
@@ -113,10 +146,11 @@ require("lazy-bootstrap").setup({
         'mrcjkb/rustaceanvim',
         version = '^4',
         lazy = false,
-        init=rust_config,
+        init = rust_config,
     },
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.6',
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.6',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = telescope_config,
     },
