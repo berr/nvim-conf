@@ -10,17 +10,29 @@ end
 local function airline_init()
 end
 
+local function lua_line_config()
+    local l = require('lualine');
+    l.setup({
+        options = { theme = 'auto' },
+    });
+end
+
 local function neo_tree_config()
     local neo_tree = require('neo-tree.command');
     local global_position = 'left';
 
-    vim.keymap.set('n', '<Leader>tt', function() neo_tree.execute(
-        {action = 'show', position = global_position, toggle = true}) end);
-    vim.keymap.set('n', '<Leader>tf', function() neo_tree.execute(
-        {action = 'focus', position = global_position, toggle = false}) end);
-    vim.keymap.set('n', '<Leader>tc', function() neo_tree.execute(
-        {action = 'close', position = global_position, toggle = false}) end);
-
+    vim.keymap.set('n', '<Leader>tt', function()
+        neo_tree.execute(
+            { action = 'show', position = global_position, toggle = true })
+    end);
+    vim.keymap.set('n', '<Leader>tf', function()
+        neo_tree.execute(
+            { action = 'focus', position = global_position, toggle = false })
+    end);
+    vim.keymap.set('n', '<Leader>tc', function()
+        neo_tree.execute(
+            { action = 'close', position = global_position, toggle = false })
+    end);
 end
 
 local function toggle_inlay_hints()
@@ -34,7 +46,7 @@ local function lsp_config()
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
     vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-    vim.keymap.set('n', ']d', vim.fiagnostic.goto_next)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
     vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
     -- Use LspAttach autocommand to only map the following keys
@@ -50,7 +62,7 @@ local function lsp_config()
             local opts = { buffer = ev.buf }
             vim.keymap.set('n', '<Leader>ch', vim.lsp.buf.hover, opts)
             vim.keymap.set('n', '<Leader>cs', vim.lsp.buf.signature_help, opts)
-            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts) 
+            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts)
             vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
             vim.keymap.set('n', '<Leader>rr', vim.lsp.buf.rename, opts)
             vim.keymap.set('n', '<Leader>rf', function()
@@ -58,14 +70,14 @@ local function lsp_config()
             end, opts)
 
             local builtin = require('telescope.builtin')
-            vim.keymap.set('n', 'gs', builtin.lsp_document_symbols) 
-            vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols) 
-            vim.keymap.set('n', 'gr', builtin.lsp_references) 
-            vim.keymap.set('n', 'gc', builtin.lsp_incoming_calls) 
-            vim.keymap.set('n', 'gC', builtin.lsp_outgoing_calls) 
-            vim.keymap.set('n', 'gi', builtin.lsp_implementations) 
-            vim.keymap.set('n', 'gd', builtin.lsp_definitions) 
-            vim.keymap.set('n', 'gD', builtin.lsp_type_definitions) 
+            vim.keymap.set('n', 'gs', builtin.lsp_document_symbols)
+            vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols)
+            vim.keymap.set('n', 'gr', builtin.lsp_references)
+            vim.keymap.set('n', 'gc', builtin.lsp_incoming_calls)
+            vim.keymap.set('n', 'gC', builtin.lsp_outgoing_calls)
+            vim.keymap.set('n', 'gi', builtin.lsp_implementations)
+            vim.keymap.set('n', 'gd', builtin.lsp_definitions)
+            vim.keymap.set('n', 'gD', builtin.lsp_type_definitions)
         end
     })
 end
@@ -84,7 +96,6 @@ local function telescope_config()
     vim.keymap.set('n', '<leader>fj', builtin.jumplist, {})
     vim.keymap.set('n', '<leader>fr', builtin.registers, {})
     vim.keymap.set('n', '<leader>fh', builtin.highlights, {})
-
 end
 
 local function mason_config()
@@ -210,25 +221,25 @@ require("lazy-bootstrap").setup({
             }
         end
     },
-    {
-        "vim-airline/vim-airline",
-        init = airline_init,
-        dependencies = {
-            "vim-airline/vim-airline-themes",
-        }
-    },
+    -- {
+    --     "vim-airline/vim-airline",
+    --     init = airline_init,
+    --     dependencies = {
+    --         "vim-airline/vim-airline-themes",
+    --     }
+    -- },
     {
         "jnurmine/Zenburn",
         config = colorscheme_config,
     },
     {
-            "nvim-neo-tree/neo-tree.nvim",
+        "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
         dependencies = {
-          "nvim-lua/plenary.nvim",
-          "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
         },
-        config = neo_tree_config 
+        config = neo_tree_config
     },
     {
         "williamboman/mason.nvim",
@@ -274,8 +285,16 @@ require("lazy-bootstrap").setup({
     {
         'hrsh7th/nvim-cmp',
         config = cmp_config,
-        dependencies = {"neovim/nvim-lspconfig"},
+        dependencies = { "neovim/nvim-lspconfig" },
     },
     'hrsh7th/cmp-vsnip',
     'hrsh7th/vim-vsnip',
+    'tpope/vim-fugitive',
+    'tpope/vim-surround',
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = lua_line_config,
+    },
+    'tpope/vim-commentary',
 })

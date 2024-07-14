@@ -33,6 +33,7 @@ local function get_keymaps_for_mode(mode)
         _user_keymaps[mode] = {}
     end
 
+
     return _user_keymaps[mode]
 end
 
@@ -105,6 +106,12 @@ function vim_helpers.go_to_last_open_position()
     if line > 0 and line <= vim.fn.line("$") then
         vim.cmd("normal! g'\"")
     end
+end
+
+function vim_helpers.insert_blank_line()
+    local line = vim.nvim_get_current_line()
+    vim.api.nvim_buf_set_lines(0, line, line, false, {''});
+
 end
 
 return vim_helpers
