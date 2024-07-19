@@ -9,7 +9,7 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
-vim.opt.showmatch = true
+vim.opt.showmatch = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 

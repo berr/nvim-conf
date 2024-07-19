@@ -44,10 +44,10 @@ local function lsp_config()
 
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-    vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+    vim.keymap.set('n', '<leader>cdf', vim.diagnostic.open_float)
+    vim.keymap.set('n', '<leader>cdp', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', '<leader>cdn', vim.diagnostic.goto_next)
+    vim.keymap.set('n', '<leader>cdl', vim.diagnostic.setloclist)
 
     -- Use LspAttach autocommand to only map the following keys
     -- after the language server attaches to the current buffer
@@ -62,12 +62,14 @@ local function lsp_config()
             local opts = { buffer = ev.buf }
             vim.keymap.set('n', '<Leader>ch', vim.lsp.buf.hover, opts)
             vim.keymap.set('n', '<Leader>cs', vim.lsp.buf.signature_help, opts)
-            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts)
-            vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
+            vim.keymap.set({'n','v'}, '<Leader>ca', vim.lsp.buf.code_action, opts)
+
             vim.keymap.set('n', '<Leader>rr', vim.lsp.buf.rename, opts)
             vim.keymap.set('n', '<Leader>rf', function()
                 vim.lsp.buf.format { async = true }
             end, opts)
+
+            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts)
 
             local builtin = require('telescope.builtin')
             vim.keymap.set('n', 'gs', builtin.lsp_document_symbols)
@@ -221,13 +223,6 @@ require("lazy-bootstrap").setup({
             }
         end
     },
-    -- {
-    --     "vim-airline/vim-airline",
-    --     init = airline_init,
-    --     dependencies = {
-    --         "vim-airline/vim-airline-themes",
-    --     }
-    -- },
     {
         "jnurmine/Zenburn",
         config = colorscheme_config,
@@ -297,4 +292,15 @@ require("lazy-bootstrap").setup({
         config = lua_line_config,
     },
     'tpope/vim-commentary',
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "luvit-meta/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 })

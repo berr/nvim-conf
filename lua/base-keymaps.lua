@@ -6,17 +6,14 @@ vim.g.mapleader = ","
 
 -- Quit vim when no changes were made
 set("n", "q", ":q<CR>")
-
--- Disable arrows
-set({"n", "v"}, "<Left>", "<NOP>", { noremap = true })
-set({"n", "v"}, "<Down>", "<NOP>", { noremap = true })
-set({"n", "v"}, "<Up>", "<NOP>", { noremap = true })
-set({"n", "v"}, "<Right>", "<NOP>", { noremap = true })
+set("n", "Q", ":bd<CR>")
 
 -- Call autocomplete
 set("i", "<C-Space>", "<C-x><C-o>", { noremap = true })
-autocmd("CompleteDone", {pattern = "*", command = "pclose"}) 
+autocmd("CompleteDone", {pattern = "*", command = "pclose"})
 
+set("n", "gh", "gg")
+set("n", "ge", "G")
 
 set("n", "<Leader>fo", ":e", { silent = false });
 set("n", "<Leader>fO", ":e %:p:h/", { silent = false });
