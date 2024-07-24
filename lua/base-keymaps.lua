@@ -20,14 +20,13 @@ h.set_n(b.window_commands, "<C-w>")
 
 h.set_n(b.file_save, ":w<CR>", { silent = false })
 h.set_n(b.file_reload, ":edit!<CR>", { silent = false })
-h.set_n(b.file_ending_windows, ":w +ff=dos<CR>", { silent = false })
-h.set_n(b.file_ending_linux, ":w +ff=unix<CR>", { silent = false })
-h.set_n(b.file_ending_mac, ":w +ff=mac<CR>", { silent = false })
+h.set_n(b.file_ending_windows, ":w ++ff=dos<CR>", { silent = false })
+h.set_n(b.file_ending_linux, ":w ++ff=unix<CR>", { silent = false })
+h.set_n(b.file_ending_mac, ":w ++ff=mac<CR>", { silent = false })
 
-h.set_n(b.duplicate_line_above, "yyP", {})
 h.set_n(b.duplicate_line_below, "yyp", {})
 h.set_n(b.move_line_up, "ddkP", {})
-h.set_n(b.move_line_down, "ddjP", {})
+h.set_n(b.move_line_down, "ddp", {})
 
 h.set_nv(b.disable_highlights, ":nohl<CR>")
 h.set_nv(b.toggle_whitespace, h.toggle_whitespace)

@@ -28,7 +28,6 @@ bindings.go_back                      = 'gb'
 bindings.go_next                      = 'gn'
 
 bindings.duplicate_line_below         = '<C-d>'
-bindings.duplicate_line_above         = '<C-D>'
 bindings.move_line_up                 = '<C-k>'
 bindings.move_line_down               = '<C-j>'
 bindings.delete_empty_line            = 'ds'
