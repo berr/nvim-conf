@@ -26,6 +26,18 @@ function vim_helpers.toggle_relative_line_numbers()
     vim.o.rnu = not vim.o.rnu
 end
 
+function vim_helpers.set_n(lhs, rhs, options)
+    vim.keymap.set("n", lhs, rhs, options)
+end
+
+function vim_helpers.set_nv(lhs, rhs, options)
+    vim.keymap.set({"n", "v"}, lhs, rhs, options)
+end
+
+function vim_helpers.set_i(lhs, rhs, options)
+    vim.keymap.set("i", lhs, rhs, options)
+end
+
 local _user_keymaps = {}
 
 local function get_keymaps_for_mode(mode)

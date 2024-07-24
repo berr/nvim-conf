@@ -1,3 +1,4 @@
+local b = require("bindings")
 local h = require("vim-helpers")
 local set = h.set
 
@@ -21,15 +22,15 @@ local function neo_tree_config()
     local neo_tree = require('neo-tree.command');
     local global_position = 'left';
 
-    vim.keymap.set('n', '<Leader>tt', function()
+    vim.keymap.set('n', b.tree_toggle, function()
         neo_tree.execute(
             { action = 'show', position = global_position, toggle = true })
     end);
-    vim.keymap.set('n', '<Leader>tf', function()
+    vim.keymap.set('n', b.tree_focus, function()
         neo_tree.execute(
             { action = 'focus', position = global_position, toggle = false })
     end);
-    vim.keymap.set('n', '<Leader>tc', function()
+    vim.keymap.set('n', b.tree_close, function()
         neo_tree.execute(
             { action = 'close', position = global_position, toggle = false })
     end);
@@ -44,10 +45,10 @@ local function lsp_config()
 
     -- Global mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-    vim.keymap.set('n', '<leader>cdf', vim.diagnostic.open_float)
-    vim.keymap.set('n', '<leader>cdp', vim.diagnostic.goto_prev)
-    vim.keymap.set('n', '<leader>cdn', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<leader>cdl', vim.diagnostic.setloclist)
+    vim.keymap.set('n', b.code_diagnostic_open_float, vim.diagnostic.open_float)
+    vim.keymap.set('n', b.code_diagnostic_previous, vim.diagnostic.goto_prev)
+    vim.keymap.set('n', b.code_diagnostic_next, vim.diagnostic.goto_next)
+    vim.keymap.set('n', b.code_diagnostic_set_loclist, vim.diagnostic.setloclist)
 
     -- Use LspAttach autocommand to only map the following keys
     -- after the language server attaches to the current buffer
@@ -60,26 +61,26 @@ local function lsp_config()
             -- Buffer local mappings.
             -- See `:help vim.lsp.*` for documentation on any of the below functions
             local opts = { buffer = ev.buf }
-            vim.keymap.set('n', '<Leader>ch', vim.lsp.buf.hover, opts)
-            vim.keymap.set('n', '<Leader>cs', vim.lsp.buf.signature_help, opts)
-            vim.keymap.set({'n','v'}, '<Leader>ca', vim.lsp.buf.code_action, opts)
+            vim.keymap.set('n', b.code_hover, vim.lsp.buf.hover, opts)
+            vim.keymap.set('n', b.code_signature_help, vim.lsp.buf.signature_help, opts)
+            vim.keymap.set({'n','v'}, b.code_action, vim.lsp.buf.code_action, opts)
 
-            vim.keymap.set('n', '<Leader>rr', vim.lsp.buf.rename, opts)
-            vim.keymap.set('n', '<Leader>rf', function()
+            vim.keymap.set('n', b.code_rename_symbol, vim.lsp.buf.rename, opts)
+            vim.keymap.set('n', b.code_format_file, function()
                 vim.lsp.buf.format { async = true }
             end, opts)
 
-            vim.keymap.set('n', '<Leader>di', toggle_inlay_hints, opts)
+            vim.keymap.set('n', b.code_display_hints, toggle_inlay_hints, opts)
 
             local builtin = require('telescope.builtin')
-            vim.keymap.set('n', 'gs', builtin.lsp_document_symbols)
-            vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols)
-            vim.keymap.set('n', 'gr', builtin.lsp_references)
-            vim.keymap.set('n', 'gc', builtin.lsp_incoming_calls)
-            vim.keymap.set('n', 'gC', builtin.lsp_outgoing_calls)
-            vim.keymap.set('n', 'gi', builtin.lsp_implementations)
-            vim.keymap.set('n', 'gd', builtin.lsp_definitions)
-            vim.keymap.set('n', 'gD', builtin.lsp_type_definitions)
+            vim.keymap.set('n', b.code_list_symbols, builtin.lsp_document_symbols)
+            vim.keymap.set('n', b.code_list_workspace_symbols, builtin.lsp_workspace_symbols)
+            vim.keymap.set('n', b.code_list_references, builtin.lsp_references)
+            vim.keymap.set('n', b.code_list_incoming_calls, builtin.lsp_incoming_calls)
+            vim.keymap.set('n', b.code_list_outgoing_calls, builtin.lsp_outgoing_calls)
+            vim.keymap.set('n', b.code_list_implementations, builtin.lsp_implementations)
+            vim.keymap.set('n', b.code_list_definitions, builtin.lsp_definitions)
+            vim.keymap.set('n', b.code_list_type_definitions, builtin.lsp_type_definitions)
         end
     })
 end
@@ -89,15 +90,14 @@ end
 
 local function telescope_config()
     local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-    vim.keymap.set('n', '<leader>fG', builtin.current_buffer_fuzzy_find, {})
-    vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-    vim.keymap.set('n', '<leader>f?', builtin.help_tags, {})
-    vim.keymap.set('n', '<leader>fm', builtin.marks, {})
-    vim.keymap.set('n', '<leader>fj', builtin.jumplist, {})
-    vim.keymap.set('n', '<leader>fr', builtin.registers, {})
-    vim.keymap.set('n', '<leader>fh', builtin.highlights, {})
+    vim.keymap.set('n', b.file_find, builtin.find_files, {})
+    vim.keymap.set('n', b.file_find_grep, builtin.live_grep, {})
+    vim.keymap.set('n', b.list_buffers, builtin.buffers, {})
+    vim.keymap.set('n', b.list_help_tags, builtin.help_tags, {})
+    vim.keymap.set('n', b.list_marks, builtin.marks, {})
+    vim.keymap.set('n', b.list_jumplist, builtin.jumplist, {})
+    vim.keymap.set('n', b.list_registers, builtin.registers, {})
+    vim.keymap.set('n', b.list_highlights, builtin.highlights, {})
 end
 
 local function mason_config()
