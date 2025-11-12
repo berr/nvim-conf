@@ -3,18 +3,106 @@ local h = require("vim-helpers")
 local set = h.set
 
 local function colorscheme_config()
-    -- General theme
     vim.cmd.colorscheme("kanagawa-dragon")
 end
 
-local function airline_init()
-end
 
 local function lua_line_config()
     local l = require('lualine');
     l.setup({
         options = { theme = 'auto' },
     });
+end
+
+local function hydra_config()
+    local Hydra = require("hydra")
+    local h1 = Hydra({
+        name = "Window Management (Immediate)",
+        mode = "n",
+        body = "<leader>w",
+        config = {
+            exit=true,
+        },
+        heads = { 
+            -- Window resizing
+            { "h", "<C-w>h", { desc = "Move window left", exit = true } },
+            { "j", "<C-w>j", { desc = "Move window down", exit = true } },
+            { "k", "<C-w>k", { desc = "Move window up", exit = true } },
+            { "l", "<C-w>l", { desc = "Move window right", exit = true } },
+            { "K", "<C-w>+", { desc = "Increase window height", exit = true } },
+            { "J", "<C-w>-", { desc = "Decrease window height", exit = true } },
+            { "H", "<C-w><", { desc = "Increase window width", exit = true } },
+            { "L", "<C-w>>", { desc = "Decrease window width", exit = true } }, 
+            { "=", "<C-w>=", { desc = "Equalize window sizes", exit = true } },
+
+            -- Window splitting and closing
+            { "s", "<C-w>s", { desc = "Split window horizontally", exit = true } },
+            { "v", "<C-w>v", { desc = "Split window vertically", exit = true } },
+            { "c", "<C-w>c", { desc = "Close current window", exit = true } },
+            { "o", "<C-w>o", { desc = "Close other windows", exit = true } },
+
+            -- Exiting Hydra
+            -- { "q", nil, { exit = true, desc = "Quit Hydra" } },
+        }
+    })
+
+
+
+
+    local h2 = Hydra({
+        name = "Window Management (Mode)",
+        mode = "n",
+        body = "<leader>W",
+        config = {
+            hint = {
+                type = "window",
+                position = 'middle',
+            }
+        },
+        heads = { 
+            -- Window resizing
+            { "h", "<C-w>h", { desc = "Move window left" } },
+            -- { "j", "<C-w>j", { desc = "Move window down" } },
+            -- { "k", "<C-w>k", { desc = "Move window up" } },
+            -- { "l", "<C-w>l", { desc = "Move window right" } },
+            -- { "K", "<C-w>+", { desc = "Increase window height" } },
+            -- { "J", "<C-w>-", { desc = "Decrease window height" } },
+            -- { "H", "<C-w><", { desc = "Increase window width" } },
+            -- { "L", "<C-w>>", { desc = "Decrease window width" } }, 
+            -- { "=", "<C-w>=", { desc = "Equalize window sizes" } },
+
+            -- Window splitting and closing
+            -- { "s", "<C-w>s", { desc = "Split window horizontally", exit = true } },
+            -- { "v", "<C-w>v", { desc = "Split window vertically", exit = true } },
+            -- { "c", "<C-w>c", { desc = "Close current window", exit = true } },
+            -- { "o", "<C-w>o", { desc = "Close other windows", exit = true } },
+
+            -- Exiting Hydra
+            -- { "q", nil, { exit = true, desc = "Quit Hydra" } },
+        }
+    })
+
+    -- table.insert(h2.hint, { "q", nil, { exit = true, desc = "Quit Hydra" } })
+
+    local t = require('telescope.builtin')
+    Hydra({
+        name = "Telescope",
+        mode = "n",
+        body = "<leader>f",
+        config = {
+            invoke_on_body = true,
+        },
+        heads = {
+            { "f", t.find_files, { desc = "Find file" } },
+            { "g", t.live_grep, { desc = "Find in file" } },
+            { "b", t.buffers, { desc = "Find buffer" } },
+            { "m", t.marks, { desc = "Find mark" } },
+            { "j", t.jumplist, { desc = "Find jump" } },
+            { "r", t.registers, { desc = "Find register" } },
+            { "h", t.highlights, { desc = "Find highlight" } },
+            { "t", t.help_tags, { desc = "Find help tag" } },
+    }})
+
 end
 
 local function neo_tree_config()
@@ -35,9 +123,9 @@ local function neo_tree_config()
     end);
 end
 
-local function toggle_inlay_hints()
-    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-end
+-- local function toggle_inlay_hints()
+--     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+-- end
 
 local function lsp_config()
     local lspconfig = require("lspconfig")
@@ -69,7 +157,7 @@ local function lsp_config()
                 vim.lsp.buf.format { async = true }
             end, opts)
 
-            vim.keymap.set('n', b.code_display_hints, toggle_inlay_hints, opts)
+            -- vim.keymap.set('n', b.code_display_hints, toggle_inlay_hints, opts)
 
             local builtin = require('telescope.builtin')
             vim.keymap.set('n', b.code_list_symbols, builtin.lsp_document_symbols)
@@ -87,16 +175,16 @@ end
 local function rust_config()
 end
 
-local function neotest_config()
-    require("neotest").setup({
-        adapters = {
-            require("neotest-python")({
-                dap = { justMyCode = false },
-            }),
-            require("rustaceanvim.neotest"),
-        },
-    })
-end
+-- local function neotest_config()
+--     require("neotest").setup({
+--         adapters = {
+--             require("neotest-python")({
+--                 dap = { justMyCode = false },
+--             }),
+--             require("rustaceanvim.neotest"),
+--         },
+--     })
+-- end
 
 local function telescope_config()
     local builtin = require('telescope.builtin')
@@ -182,47 +270,54 @@ local function cmp_config()
                 { name = 'buffer' },
             })
     })
-
-    -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
-    -- Set configuration for specific filetype.
-    --[[ cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({
-      { name = 'git' },
-    }, {
-      { name = 'buffer' },
-    })
- })
- require("cmp_git").setup() ]]
-    --
-
-    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline({ '/', '?' }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-            { name = 'buffer' }
-        }
-    })
-
-    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-            { name = 'path' }
-        }, {
-            { name = 'cmdline' }
-        }),
-        matching = { disallow_symbol_nonprefix_matching = false }
-    })
-
-    -- Set up lspconfig.
-    -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-    -- require('lspconfig')['rust'].setup {
-    --    capabilities = capabilities
-    -- }
 end
 
 require("lazy-bootstrap").setup({
+    {
+        "rebelot/kanagawa.nvim",
+        config = colorscheme_config,
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = lua_line_config,
+    },
+    {
+        "nvimtools/hydra.nvim",
+        config = hydra_config, 
+    },
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons"
+        },
+        lazy = false,
+        config = neo_tree_config
+    },
+    {
+        "mason-org/mason.nvim",
+        opts = {},
+        dependencies = { },
+    },
+    {
+        "mason-org/mason-lspconfig.nvim",
+        opts = {},
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
+        },
+    },
+    {
+        "neovim/nvim-lspconfig",
+        lazy = false,
+        config = lsp_config,
+        opts = {
+            inlay_hints = { enabled = true },
+        },
+    },
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -238,54 +333,6 @@ require("lazy-bootstrap").setup({
         end
     },
     {
-        "rebelot/kanagawa.nvim",
-        config = colorscheme_config,
-    },
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-        },
-        config = neo_tree_config
-    },
-    {
-        "williamboman/mason.nvim",
-        lazy = false,
-        config = mason_config,
-    },
-    {
-        "williamboman/mason-lspconfig.nvim",
-        config = mason_lsp_config,
-        lazy = false,
-        dependencies = { "williamboman/mason.nvim" },
-    },
-    {
-        "neovim/nvim-lspconfig",
-        lazy = false,
-        config = lsp_config,
-        opts = {
-            inlay_hints = { enabled = true },
-        },
-    },
-    {
-        "nvim-neotest/neotest",
-        dependencies = {
-            "nvim-neotest/nvim-nio",
-            "nvim-lua/plenary.nvim",
-            "antoinemadec/FixCursorHold.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-neotest/neotest-python",
-        },
-        config = neotest_config,
-    },
-    {
-        "mfussenegger/nvim-dap",
-        lazy = true,
-        config = dap_config,
-    },
-    {
         'mrcjkb/rustaceanvim',
         version = '^4',
         lazy = false,
@@ -293,30 +340,10 @@ require("lazy-bootstrap").setup({
     },
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.6',
+        tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = telescope_config,
     },
-
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
-    {
-        'hrsh7th/nvim-cmp',
-        config = cmp_config,
-        dependencies = { "neovim/nvim-lspconfig" },
-    },
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/vim-vsnip',
-    'tpope/vim-fugitive',
-    'tpope/vim-surround',
-    {
-        'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = lua_line_config,
-    },
-    'tpope/vim-commentary',
     {
         "folke/lazydev.nvim",
         ft = "lua", -- only load on lua files
