@@ -4,8 +4,7 @@ local set = h.set
 
 local function colorscheme_config()
     -- General theme
-    vim.cmd.colorscheme("desert")
-    vim.cmd.highlight("Normal", "ctermfg=188 ctermbg=None")
+    vim.cmd.colorscheme("kanagawa-dragon")
 end
 
 local function airline_init()
@@ -63,7 +62,7 @@ local function lsp_config()
             local opts = { buffer = ev.buf }
             vim.keymap.set('n', b.code_hover, vim.lsp.buf.hover, opts)
             vim.keymap.set('n', b.code_signature_help, vim.lsp.buf.signature_help, opts)
-            vim.keymap.set({'n','v'}, b.code_action, vim.lsp.buf.code_action, opts)
+            vim.keymap.set({ 'n', 'v' }, b.code_action, vim.lsp.buf.code_action, opts)
 
             vim.keymap.set('n', b.code_rename_symbol, vim.lsp.buf.rename, opts)
             vim.keymap.set('n', b.code_format_file, function()
@@ -86,6 +85,17 @@ local function lsp_config()
 end
 
 local function rust_config()
+end
+
+local function neotest_config()
+    require("neotest").setup({
+        adapters = {
+            require("neotest-python")({
+                dap = { justMyCode = false },
+            }),
+            require("rustaceanvim.neotest"),
+        },
+    })
 end
 
 local function telescope_config()
@@ -117,7 +127,7 @@ local function mason_lsp_config()
         end,
 
         ["rust_analyzer"] = function()
-            rust_config()
+            return true;
         end
     }
 end
@@ -218,13 +228,17 @@ require("lazy-bootstrap").setup({
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup {
-                ensure_installed = { "bash", "c", "cpp", "dockerfile", "git_config", "git_rebase", "gitattributes", "gitcommit", "gitignore", "hcl", "json", "lua", "markdown", "markdown_inline", "python", "rust", "sql", "vim", "vimdoc" },
+                ensure_installed = {
+                    "bash", "c", "cpp", "dockerfile", "git_config", "git_rebase",
+                    "gitattributes", "gitcommit", "gitignore", "hcl", "json", "lua",
+                    "markdown", "markdown_inline", "python", "rust", "sql",
+                    "vim", "vimdoc" },
                 highlight = { enable = true, }
             }
         end
     },
     {
-        "jnurmine/Zenburn",
+        "rebelot/kanagawa.nvim",
         config = colorscheme_config,
     },
     {
@@ -254,6 +268,17 @@ require("lazy-bootstrap").setup({
         opts = {
             inlay_hints = { enabled = true },
         },
+    },
+    {
+        "nvim-neotest/neotest",
+        dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-neotest/neotest-python",
+        },
+        config = neotest_config,
     },
     {
         "mfussenegger/nvim-dap",
